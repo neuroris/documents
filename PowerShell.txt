@@ -1,23 +1,31 @@
+* Remote Configuration
 WinRM quickconfig
-
 Enable-PSRemoging -Force
-
 네트워크 연결형식 (개인)
-
 gpedit.msc
 (컴퓨터 구성 > Windows 설정 > 보안설정 > 네트워크 목록 관지자 정책> 네트워크 >네트워트 위치: 위치유형;개인)
-
 PS:>Set-NetConnectionProfile -NetworkCategory Private
-
 Option) PS:>Enable-PSRemoting -SkipNetworkProfileCheck -Force
-
 Set-Item WSMan:\localhost\Client\TrustedHosts -Value jerver
-
 Enter-PSSession -ComputerName 121.167146.201 -Credential chaorum
 
 * WinRM service 중지
 Stop-Service WinRM -PassThru
 Set-Service WinRM -StartupType Disabled -PassThru
-
 WinRM enumerate winrm/config/listener
 WinRM get winrm/config
+
+* Server 구성 (jhome)
+A. Server
+1. 방화벽 inbound 5986 접속 허용(모두 허용, 공용x)
+2. PS> New-SelfSignedCertificate -DNSName 121.167.146.201 -CertStoreLocation Cert:\LocalMachine\My
+3. CMD> WinRM create winrm/config/listener?Address=*+Transport=https @{hostname="121.167.146.201";certificatethumbprint="xxxxxx"}
+
+B. Client
+Set-Item WSMan:\localhost\Client\TrustedHosts -Value 121.167.146.201
+$so = New-PSSessionOption -SkipCACheck -SkipCNCheck
+Enter-PSSession -ComputerName 121.167.146.201 -Credential chaorum -UseSSL -Port 5986 -SessionOption $so
+Exit-PSSession
+
+* SecureString File
+"password" | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString | Out-File .\systemin.txt
