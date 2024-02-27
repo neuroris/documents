@@ -1,0 +1,23 @@
+WinRM quickconfig
+
+Enable-PSRemoging -Force
+
+네트워크 연결형식 (개인)
+
+gpedit.msc
+(컴퓨터 구성 > Windows 설정 > 보안설정 > 네트워크 목록 관지자 정책> 네트워크 >네트워트 위치: 위치유형;개인)
+
+PS:>Set-NetConnectionProfile -NetworkCategory Private
+
+Option) PS:>Enable-PSRemoting -SkipNetworkProfileCheck -Force
+
+Set-Item WSMan:\localhost\Client\TrustedHosts -Value jerver
+
+Enter-PSSession -ComputerName 121.167146.201 -Credential chaorum
+
+* WinRM service 중지
+Stop-Service WinRM -PassThru
+Set-Service WinRM -StartupType Disabled -PassThru
+
+WinRM enumerate winrm/config/listener
+WinRM get winrm/config
