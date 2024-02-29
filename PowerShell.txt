@@ -29,3 +29,11 @@ Exit-PSSession
 
 * SecureString File
 "password" | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString | Out-File .\systemin.txt
+
+* PSSession Configuration
+A. Server
+Register-PSSessionConfiguration -Name jserver_profile -StartupScript
+c:\ps\profile_jserver.ps1
+
+B. Client
+Enter-PSSession jserver -ConfigurationName jserver_profile -Credential chaorum
