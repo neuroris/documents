@@ -37,3 +37,6 @@ c:\ps\profile_jserver.ps1
 
 B. Client
 Enter-PSSession jserver -ConfigurationName jserver_profile -Credential chaorum
+
+* Git over PSSession
+git config --global credential.credentialStore dpapi
